@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const char FILENAME[] = "dados.txt";
+
 typedef struct {
     int comparacoes;
     int trocas;
@@ -55,7 +57,7 @@ void printArray(int array[], int size) {
     printf("\n");
 }
 
-int loadData(const char *filename, int array[], int max_size) {
+int loadData(const char *filename, int **array) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("Erro ao abrir o arquivo %s\n", filename);
@@ -63,8 +65,15 @@ int loadData(const char *filename, int array[], int max_size) {
     }
 
     int size = 0;
-    while (fscanf(file, "%d", &array[size]) != EOF && size < max_size) {
+    int capacity = 10;
+    *array = malloc(capacity * sizeof(int));
+
+    while (fscanf(file, "%d", &(*array)[size]) == 1) {
         size++;
+        if (size >= capacity) {
+            capacity *= 2;
+            *array = realloc(*array, capacity * sizeof(int));
+        }
     }
 
     fclose(file);
@@ -72,27 +81,18 @@ int loadData(const char *filename, int array[], int max_size) {
 }
 
 int main() {
-    int array[1001]; 
+    int *array = NULL; 
     int size;
 
-    size = loadData("dados.txt", array, 100);
+    size = loadData(FILENAME, &array);
     if (size == -1) {
-        return 1;  
-    }
-
-    int backupArray[1001];
-    for (int i = 0; i < size; i++) {
-        backupArray[i] = array[i];
+        return 1;
     }
 
     Metrica metricaBubble = {0, 0};
     Metrica metricaQuick = {0, 0};
 
     printf("\nComparando os dois algoritmos:\n");
-
-    for (int i = 0; i < size; i++) {
-        array[i] = backupArray[i];
-    }
 
     bubbleSort(array, size, &metricaBubble);
     quickSort(array, 0, size - 1, &metricaQuick);
