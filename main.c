@@ -4,7 +4,10 @@
 
 const char FILENAME[] = "dados.txt";
 
+// Novo tipo que vai armazenar as métricas
+// dos métodos de ordenação.
 typedef struct {
+    char nome[20];
     int comparacoes;
     int trocas;
 } Metrica;
@@ -110,6 +113,10 @@ int main() {
 
     int *array = malloc(sizeof(int) * size);
 
+    Metrica metricaInsert = {"Insertion Sort", 0,0};
+    Metrica metricaBubble = {"Bubble Sort", 0, 0};
+    Metrica metricaQuick = {"Quick Sort", 0, 0};
+
     printf("\nComparando os três algoritmos:\n");
 
     memcpy(array, originalArray, sizeof(int) * size);
@@ -125,21 +132,30 @@ int main() {
     printf("Metricas do Bubble Sort: %d comparacoes, %d trocas\n", metricaBubble.comparacoes, metricaBubble.trocas);
     printf("Metricas do Quick Sort: %d comparacoes, %d trocas\n", metricaQuick.comparacoes, metricaQuick.trocas);
 
-    if (metricaBubble.comparacoes < metricaQuick.comparacoes) {
-        printf("Bubble Sort foi mais eficiente em termos de comparações.\n");
-    } else if(metricaBubble.comparacoes > metricaQuick.comparacoes) {
-        printf("Quick Sort foi mais eficiente em termos de comparações.\n");
-    } else {
-        printf("As comparacoes foram iguais\n");
+    // Printar o método mais eficiente em comparações e trocas
+    Metrica metricas[] = {metricaInsert, metricaBubble, metricaQuick};
+
+    Metrica *menosComparacoes;
+    Metrica *menosTrocas;
+
+    for (int i=0;i<3;i++) {
+        if (i==0) {
+            menosComparacoes = &metricas[i];
+            menosTrocas = &metricas[i];
+            continue;
+        }
+
+        if (metricas[i].comparacoes < menosComparacoes->comparacoes) {
+            menosComparacoes = &metricas[i];
+        }
+        if (metricas[i].trocas < menosTrocas->trocas) {
+            menosTrocas = &metricas[i];
+        }
     }
 
-    if (metricaBubble.trocas < metricaQuick.trocas) {
-        printf("Bubble Sort foi mais eficiente em termos de trocas.\n");
-    } else if(metricaBubble.trocas > metricaQuick.trocas) {
-        printf("Quick Sort foi mais eficiente em termos de trocas.\n");
-    } else {
-        printf("As trocas foram iguais\n");
-    }
+    printf("\n");
+    printf("%s foi mais eficiente em comparações\n", menosComparacoes->nome);
+    printf("%s foi mais eficiente em trocas\n", menosTrocas->nome);
 
     return 0;
 }
