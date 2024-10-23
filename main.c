@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 const char FILENAME[] = "dados.txt";
 
@@ -81,20 +82,22 @@ int loadData(const char *filename, int **array) {
 }
 
 int main() {
-    int *array = NULL; 
-    int size;
+    int *originalArray = NULL; 
+    int size = -1;
 
-    size = loadData(FILENAME, &array);
+    size = loadData(FILENAME, &originalArray);
     if (size == -1) {
         return 1;
     }
 
-    Metrica metricaBubble = {0, 0};
-    Metrica metricaQuick = {0, 0};
+    int *array = malloc(sizeof(int) * size);
 
     printf("\nComparando os dois algoritmos:\n");
 
+    memcpy(array, originalArray, sizeof(int) * size);
     bubbleSort(array, size, &metricaBubble);
+
+    memcpy(array, originalArray, sizeof(int) * size);
     quickSort(array, 0, size - 1, &metricaQuick);
 
     printf("Metricas do Bubble Sort: %d comparacoes, %d trocas\n", metricaBubble.comparacoes, metricaBubble.trocas);
