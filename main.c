@@ -9,6 +9,24 @@ typedef struct {
     int trocas;
 } Metrica;
 
+void insertionSort(int array[], int size, Metrica *metrica) {
+    int currentIndex, key, position;
+    for (currentIndex = 1; currentIndex < size; currentIndex++) {
+        metrica->comparacoes++;
+        key = array[currentIndex]; 
+        position = currentIndex - 1;
+
+        while (position >= 0 && array[position] > key) {
+            metrica->comparacoes++;
+            array[position + 1] = array[position];
+            metrica->trocas++;
+            position--;
+        }
+        array[position + 1] = key; 
+        metrica->trocas++;
+    }
+}
+
 void bubbleSort(int array[], int size, Metrica *metrica) {
     for (int step = 0; step < size - 1; ++step) {
         for (int i = 0; i < size - step - 1; ++i) {
@@ -92,7 +110,10 @@ int main() {
 
     int *array = malloc(sizeof(int) * size);
 
-    printf("\nComparando os dois algoritmos:\n");
+    printf("\nComparando os três algoritmos:\n");
+
+    memcpy(array, originalArray, sizeof(int) * size);
+    insertionSort(array, size, &metricaInsert);
 
     memcpy(array, originalArray, sizeof(int) * size);
     bubbleSort(array, size, &metricaBubble);
@@ -100,6 +121,7 @@ int main() {
     memcpy(array, originalArray, sizeof(int) * size);
     quickSort(array, 0, size - 1, &metricaQuick);
 
+    printf("Métricas do Insertion Sort: %d comparacoes, %d trocas\n", metricaInsert.comparacoes, metricaInsert.trocas);
     printf("Metricas do Bubble Sort: %d comparacoes, %d trocas\n", metricaBubble.comparacoes, metricaBubble.trocas);
     printf("Metricas do Quick Sort: %d comparacoes, %d trocas\n", metricaQuick.comparacoes, metricaQuick.trocas);
 
