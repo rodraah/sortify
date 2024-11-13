@@ -119,14 +119,22 @@ int main() {
 
     printf("\nComparando os três algoritmos:\n");
 
+    printf("Array antes da ordenação: \n");
+    printArray(originalArray, size);
     memcpy(array, originalArray, sizeof(int) * size);
     insertionSort(array, size, &metricaInsert);
+    printf("Array após formatação usando Insertion Sort: \n");
+    printArray(array, size);
 
     memcpy(array, originalArray, sizeof(int) * size);
     bubbleSort(array, size, &metricaBubble);
+    printf("Array após formatação usando Bubble Sort: \n");
+    printArray(array, size);
 
     memcpy(array, originalArray, sizeof(int) * size);
     quickSort(array, 0, size - 1, &metricaQuick);
+    printf("Array após formatação usando Quick Sort: \n");
+    printArray(array, size);
 
     printf("Métricas do Insertion Sort: %d comparacoes, %d trocas\n", metricaInsert.comparacoes, metricaInsert.trocas);
     printf("Metricas do Bubble Sort: %d comparacoes, %d trocas\n", metricaBubble.comparacoes, metricaBubble.trocas);
